@@ -66,9 +66,13 @@ class Workflow(object):
             if self.__normalizer is not None:
                samples = self.__normalizer.normalize_list_with_same_mid(samples)
             total = len(samples)
+            plt.figure(figsize=(12, 10))
             for j, sample in enumerate(samples):
                 # sample.show_plot()
-                sample.sub_plot((total, 1, j + 1))
+                plt.subplot(total // 2, 2, j + 1)
+                plt.autoscale()
+                plt.plot(sample.sample)
+                # sample.sub_plot((total, 1, j + 1))
             plt.savefig(file_path)
 
 

@@ -38,3 +38,4 @@ def export_all():
     workflow.export_all_channel_sample("/Users/zero/brain/postive")
 
 export_all()
+# print(plt.rcParams["figure.figsize"])
