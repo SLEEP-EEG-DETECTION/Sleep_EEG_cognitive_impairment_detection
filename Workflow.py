@@ -62,7 +62,7 @@ class Workflow(object):
         self.__check_dir(save_path)
         sample_list = self.__sampler.sample_multi_channel(channels, False)  # type: List[List[SampleSeq]]
         for i, samples in enumerate(sample_list):
-            file_path = os.path.join(save_path, f"{i}.jpg")
+            file_path = os.path.join(save_path, f"{self.edf_data.name}-{samples[0].mid_idx}.jpg")
             if self.__normalizer is not None:
                samples = self.__normalizer.normalize_list_with_same_mid(samples)
             total = len(samples)
@@ -72,6 +72,7 @@ class Workflow(object):
                 plt.subplot(total // 2, 2, j + 1)
                 plt.autoscale()
                 plt.plot(sample.sample)
+                plt.title(f"{sample.channel_name}-{j + 1}")
                 # sample.sub_plot((total, 1, j + 1))
             plt.savefig(file_path)
 
