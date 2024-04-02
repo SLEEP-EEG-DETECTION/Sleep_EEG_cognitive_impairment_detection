@@ -3,6 +3,8 @@ from SampleSequence import SampleSeq
 from BaseNormalizer import BaseNormalizer
 from BaseSampler import BaseSampler
 from typing import List
+import numpy as np
+import matplotlib.pyplot as plt
 import os
 
 class Workflow(object):
@@ -50,6 +52,25 @@ class Workflow(object):
             for i, sample in enumerate(samples):
                 file_path = os.path.join(save_chanel_path, f"{i}.jpg")
                 sample.export_plot(file_path)
+
+    def export_all_channel_sample(self, save_dir: str) -> None:
+        channels = self.__edf.all_channels_data
+        if self.__sampler is None:
+            print("采样器为空")
+            return
+        save_path = os.path.join(save_dir, self.__edf.name)
+        self.__check_dir(save_path)
+        sample_list = self.__sampler.sample_multi_channel(channels, False)  # type: List[List[SampleSeq]]
+        for i, samples in enumerate(sample_list):
+            file_path = os.path.join(save_path, f"{i}.jpg")
+            if self.__normalizer is not None:
+               samples = self.__normalizer.normalize_list_with_same_mid(samples)
+            total = len(samples)
+            for j, sample in enumerate(samples):
+                # sample.show_plot()
+                sample.sub_plot((total, 1, j + 1))
+            plt.savefig(file_path)
+
 
     def __check_dir(self, path: str) -> bool:
         try:

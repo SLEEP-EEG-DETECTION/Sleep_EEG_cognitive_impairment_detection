@@ -43,5 +43,24 @@ class BaseSampler(object):
     def sample(self, channel: object) -> List[SampleSeq]:
         return [self._sample_with_event(it, channel) for it in self._event_idx_list]
     
-    def sample_multi_channel(self, channels: list) -> List[list]:
-        return [self.sample(channel) for channel in channels]
+    def sample_multi_channel(self, channels: list, channel_first: bool = True) -> List[list]:
+        res = [self.sample(channel) for channel in channels]
+        if channel_first:
+            return res
+        return self.transpose_matrix(res)
+        
+
+    def transpose_matrix(self, matrix: List[list]):
+    # 获取矩阵的行数和列数
+        rows = len(matrix)
+        cols = len(matrix[0])
+
+        # 创建一个新的二维列表来存储对调后的矩阵
+        transposed_matrix = [[None] * rows for _ in range(cols)]
+
+        # 遍历原始矩阵的行和列，并将其对调存储到新的矩阵中
+        for i in range(rows):
+            for j in range(cols):
+                transposed_matrix[j][i] = matrix[i][j]
+
+        return transposed_matrix
