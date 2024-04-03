@@ -70,8 +70,10 @@ class Workflow(object):
             for j, sample in enumerate(samples):
                 # sample.show_plot()
                 plt.subplot(total // 2, 2, j + 1)
-                plt.autoscale()
-                plt.plot(sample.sample)
+                plt.ylim(-5*1e-5, 5*1e-5)
+                plt.xlim(0, 2000)
+                plt.xticks([0, 500, 1000, 1500, 2000], ['0', '1', '2', '3', '4'])
+                plt.plot(sample.sample, scalex=False, scaley=False)
                 plt.title(f"{sample.channel_name}-{j + 1}")
                 # sample.sub_plot((total, 1, j + 1))
             plt.savefig(file_path)
