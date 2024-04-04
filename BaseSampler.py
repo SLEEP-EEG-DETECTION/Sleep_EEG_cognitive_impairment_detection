@@ -20,7 +20,7 @@ class BaseSampler(object):
         self._event_idx_list = event_idx_list
         self._time_length = time_length
    
-    def _sample_with_event(self, event_idx, channel: object) -> SampleSeq:
+    def _sample_with_event(self, event_idx, channel: object) -> SampleSeq | None:
         """
         根据单一时间点进行采样
         Parameters:
@@ -37,11 +37,18 @@ class BaseSampler(object):
         l = max(event_idx - step, 0)  # 防止左侧越界
         r = min(event_idx + step, len(channel.data))  # 防止右侧越界
         length = r - l  # 计算实际的采样点数，乘2就到的采样的时间长度，单位毫秒
+        if length * 2 < self._time_length:
+            return None
         sample_data = channel.data[l:r]
         return SampleSeq(event_idx, length * 2, sample_data, channel, l, self._type)
 
     def sample(self, channel: object) -> List[SampleSeq]:
-        return [self._sample_with_event(it, channel) for it in self._event_idx_list]
+        result = []
+        for it in self._event_idx_list:
+            _SampleSeq = self._sample_with_event(it, channel)
+            if _SampleSeq is not None: # 保证每个都是同样时间步长度，把不等的删除，即把返回None的删除
+                result.append(_SampleSeq)
+        return result
     
     def sample_multi_channel(self, channels: list, channel_first: bool = True) -> List[list]:
         res = [self.sample(channel) for channel in channels]
@@ -49,8 +56,8 @@ class BaseSampler(object):
             return res
         return self.transpose_matrix(res)
         
-
-    def transpose_matrix(self, matrix: List[list]):
+    @staticmethod
+    def transpose_matrix(matrix: List[list]):
     # 获取矩阵的行数和列数
         rows = len(matrix)
         cols = len(matrix[0])

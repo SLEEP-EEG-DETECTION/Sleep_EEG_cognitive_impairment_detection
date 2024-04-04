@@ -12,4 +12,3 @@ class BaseNormalizer(object):
         mid = (sample_seq_list[0].arg_max_idx + sample_seq_list[0].arg_min_idx) // 2
         sampler = BaseSampler([mid], sample_seq_list[0].time_length)
         return [sampler.sample(it.channel)[0] for it in sample_seq_list]
-        
