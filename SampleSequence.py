@@ -102,6 +102,10 @@ class SampleSeq(object):
         return self.__max
     
     @property
+    def bias(self) -> int:
+        return self.__bias
+    
+    @property
     def min(self) -> float:
         """
         采样序列最小值
@@ -118,6 +122,10 @@ class SampleSeq(object):
         采样序列中点坐标在原序列中的坐标
         """
         return (self.start_idx + self.end_idx) // 2
+    
+    @property
+    def length(self) -> int:
+        return len(self.__sample)
     
     def normalize(self, normalizer: object) -> 'SampleSeq':
         return normalizer.normalize(self)
