@@ -112,6 +112,6 @@ class Utils:
         step = time_length // 4
         mid = sample.mid_idx
         channel = sample.channel  # type: Channel
-        new_data = channel.data[mid-step: mid + step]
+        new_data = channel.data[mid-step: mid + step] # 这里有可能左右边界越界，但是对于标注数据来说没关系，对于训练数据决不允许越界，进来的数据已经是非越界数据，此处不用做特殊处理
         return SampleSeq(sample.event_idx, time_length, new_data, channel, sample.bias, sample.type)
     

@@ -43,7 +43,7 @@ class Workflow(object):
         
         for channel in channels:
             save_chanel_path = os.path.join(save_dir, self.__edf.name ,channel.name)
-            if not self.__check_dir(save_chanel_path):
+            if not Workflow.__check_dir(save_chanel_path):
                 print("创建文件夹异常")
                 raise Exception("创建文件夹异常")
             samples = self.__sampler.sample(channel)
@@ -59,7 +59,7 @@ class Workflow(object):
             print("采样器为空")
             return
         save_path = os.path.join(save_dir, self.__edf.name)
-        self.__check_dir(save_path)
+        Workflow.__check_dir(save_path)
         sample_list = self.__sampler.sample_multi_channel(channels, False)  # type: List[List[SampleSeq]]
         for i, samples in enumerate(sample_list):
             file_path = os.path.join(save_path, f"{self.edf_data.name}-{samples[0].mid_idx}.jpg")
@@ -79,7 +79,29 @@ class Workflow(object):
             plt.savefig(file_path)
 
 
-    def __check_dir(self, path: str) -> bool:
+    @staticmethod
+    def export_all_channel_sample_from_sampleSeqs(sample_list: List[List[SampleSeq]], name: str, save_dir: str) -> None:
+        save_path = os.path.join(save_dir, name)
+        Workflow.__check_dir(save_path)
+        for i, samples in enumerate(sample_list):
+            file_path = os.path.join(save_path, f"{name}-{samples[0].mid_idx}.jpg")
+            total = len(samples)
+            plt.figure(figsize=(12, 10))
+            for j, sample in enumerate(samples):
+                # sample.show_plot()
+                plt.subplot(total // 2, 2, j + 1)
+                # plt.ylim(-10*1e-5, 10*1e-5)
+                plt.ylim(sample.min * 1.5, sample.max * 1.5)
+                plt.xlim(0, 2000)
+                plt.xticks([0, 500, 1000, 1500, 2000], ['0', '1', '2', '3', '4'])
+                plt.plot(sample.sample, scalex=False, scaley=False)
+                plt.title(f"{sample.channel_name}_{j + 1}")
+                # sample.sub_plot((total, 1, j + 1))
+            plt.savefig(file_path)
+
+
+    @staticmethod
+    def __check_dir(path: str) -> bool:
         try:
             if not os.path.exists(path):
                 os.makedirs(path)
