@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List
+from typing import List, Tuple
 import matplotlib.pyplot as plt
 
 TimeSeq = np.ndarray[int, np.dtypes.Int64DType] | List[int]
@@ -102,6 +102,10 @@ class SampleSeq(object):
         return self.__max
     
     @property
+    def bias(self) -> int:
+        return self.__bias
+    
+    @property
     def min(self) -> float:
         """
         采样序列最小值
@@ -119,14 +123,18 @@ class SampleSeq(object):
         """
         return (self.start_idx + self.end_idx) // 2
     
+    @property
+    def length(self) -> int:
+        return len(self.__sample)
+    
     def normalize(self, normalizer: object) -> 'SampleSeq':
         return normalizer.normalize(self)
     
-    def plot(self, name: str = "original") -> None:
-        self.__plot(name)
+    def show_plot(self, name: str = "original") -> None:
+        self.plot(name)
         plt.show(block=False)
     
-    def __plot(self, name: str = "original") -> None:
+    def plot(self, name: str = "original") -> None:
         # plt.rcParams["font.sans-serif"]=["SimHei"] #设置字体
         # plt.rcParams["axes.unicode_minus"]=False #该语句解决图像中的“-”负号的乱码问题
 
@@ -141,7 +149,13 @@ class SampleSeq(object):
         plt.annotate(show_min, xy=(x_min, y_min), xytext=(x_min, y_min))
         plt.annotate(show_max, xy=(x_max, y_max), xytext=(x_max, y_max))
     
+    def sub_plot(self, sub_lpot_param: Tuple[int, int, int]) -> None:
+        plt.subplot(*sub_lpot_param)
+        plt.plot()
+    
     def export_plot(self, save_path: str) -> None:
-        self.__plot()
+        self.plot()
         plt.savefig(save_path)
+    
+        
 
