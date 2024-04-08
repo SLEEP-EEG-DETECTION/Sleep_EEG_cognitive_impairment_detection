@@ -6,6 +6,7 @@ from typing import List
 import os
 from Workflow import Workflow
 import matplotlib.pyplot as plt
+from Utils import Utils
 
 def main():
     path = "001.edf"
@@ -43,9 +44,10 @@ def export_standard_train_data(standard_time_length=1500):
     normalizer = BaseNormalizer()
     sampler = BaseSampler(edf.k_complex_time, standard_time_length)
     channels_sampler = sampler.sample_multi_channel([edf.channel_C3, edf.channel_F4, edf.channel_C3, edf.channel_C4], channel_first=False)
-    new_ample = BaseSampler.transpose_matrix([normalizer.normalize_list_with_same_mid(tmp) for tmp in channels_sampler])
+    new_ample = [normalizer.normalize_list_with_same_mid(tmp) for tmp in channels_sampler]
     # TODO （1）1500的样本保存；（2）4000范围的样本画图，同1500样本的中心点；（3）负采样
-    
+    # Workflow.export_all_channel_sample_from_sampleSeqs(new_ample, "001", "./")
+    Utils.export_multi_channle_samples("./",new_ample,4000)
     
 
     t = 0
