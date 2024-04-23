@@ -39,9 +39,9 @@ class Edf(object):
     用于读取edf数据，并获取各个通道的值以及k复合波标注
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str, picks=['EEG F3-A2', 'EEG F4-A1', 'EEG C3-A2', 'EEG C4-A1']) -> None:
         self.__raw = mne.io.read_raw_edf(path)  # type: RawEDF
-        tmp = self.__raw.get_data(picks=['EEG F3-A2', 'EEG F4-A1', 'EEG C3-A2', 'EEG C4-A1']) # , 'EEG O1-A2', 'EEG O2-A1'])  # type: np.ndarray[int, np.dtypes.Float64DType]
+        tmp = self.__raw.get_data(picks=picks) # , 'EEG O1-A2', 'EEG O2-A1'])  # type: np.ndarray[int, np.dtypes.Float64DType]
         names = ["F3", "F4", "C3", "C4", "O1", "O2"]
         self.__channels_data = [Channel(tmp[i], names[i]) for i in range(0, len(tmp))]  # type: List[Channel]
         time_data, _ = mne.events_from_annotations(self.__raw, event_id={"K-复合波": 1})
