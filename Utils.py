@@ -3,6 +3,7 @@ from SampleSequence import SampleSeq
 from typing import List
 import matplotlib.pyplot as plt
 import os
+import numpy as np
 
 
 class Utils:
@@ -140,3 +141,20 @@ class Utils:
         new_data = channel.data[mid-step: mid + step] # 这里有可能左右边界越界，但是对于标注数据来说没关系，对于训练数据决不允许越界，进来的数据已经是非越界数据，此处不用做特殊处理
         return SampleSeq(sample.event_idx, time_length, new_data, channel, sample.bias, sample.type)
     
+    @staticmethod
+    def export_sample(sampleseq_list: List[List[SampleSeq]]) -> List[np.ndarray]:
+        """
+        返回整合完的n通道数据
+
+        Args:
+            sampleseq_list (List[List[SampleSeq]]): 
+                channels_sampler: [sample nums, channel nums]
+
+        Returns:
+        ---------------
+        返回重新采样后的数据
+        """
+        data_all = []
+        for i in sampleseq_list:
+            data_all.append(np.array([j.sample for j in i]))
+        return data_all
