@@ -20,7 +20,7 @@ class BaseSampler(object):
         self._event_idx_list = event_idx_list
         self._time_length = time_length
    
-    def _sample_with_event(self, event_idx, channel: object) -> SampleSeq | None:
+    def _sample_with_event(self, event_idx: int, channel: object) -> SampleSeq | None:
         """
         根据单一时间点进行采样
         Parameters:
