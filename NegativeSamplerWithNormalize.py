@@ -53,7 +53,11 @@ class NegativeSamplerWithNormalize(BaseSampler):
         
 
     def _normalize(self, points: List[int], channels: List[object], left_edge: int, right_edge: int) -> None:
+        dic = dict()
         for p in points:
+            if p in self.__dic:
+                continue
+            self.__dic[p] = p
             tmp = list()
             for channel in channels:
                 sample = self._normalize_one(p, channel, left_edge, right_edge)
@@ -65,6 +69,9 @@ class NegativeSamplerWithNormalize(BaseSampler):
             mean = np.mean(tmp)
             distance = np.abs(np.subtract(tmp, mean))
             id = np.argmin(distance)
+            if id in dic:
+                continue
+            dic[id] = id
             self._sample_point_list.append(id)
 
     
