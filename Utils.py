@@ -68,8 +68,6 @@ class Utils:
                 plt.title(f"{sample.channel_name}-{i + 1}")
             plt.savefig(file_path)
 
-        
-
     @staticmethod
     def check_dir(path: str) -> bool:
         """"
