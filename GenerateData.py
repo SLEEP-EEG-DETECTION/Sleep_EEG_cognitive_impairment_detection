@@ -8,6 +8,7 @@ from BaseSampler import BaseSampler
 from NegativeSamplerWithNormalize import NegativeSamplerWithNormalize
 from SampleSequence import SampleSeq
 import pickle
+from BaseNormalizer import BaseNormalizer
 
 class LabelData:
 
@@ -39,15 +40,23 @@ class GenerateData:
 
         
         post_data = list()
+        normalizer = BaseNormalizer()
         negative_data = list()
         for k, v in  postitive_label_dic.items():
             edf = Edf(self._edf_dic[k])
             sampler = BaseSampler(v, 1500)
-            negative_sampler = NegativeSamplerWithNormalize(v, 1500, 10, 750, 30000, edf.name)
-            x = sampler.sample_multi_channel(edf.all_channels_data, False)
+            
+            
+            x = sampler.sample_multi_channel(edf.all_channels_data, False)  # n * channles * points
+            
+            z = [normalizer.normalize_list_with_same_mid(t) for t in x]
+
+            new_event_list = [p[0].mid_idx for p in z]
+
+            negative_sampler = NegativeSamplerWithNormalize(new_event_list, 1500, 10, 750, 30000, edf.name)
             y = negative_sampler.sample_multi_channel(edf.all_channels_data, False)
             print(negative_sampler.show())
-            post_data.extend(x)
+            post_data.extend(z)
             if y is not None:
                 negative_data.extend(y)
         

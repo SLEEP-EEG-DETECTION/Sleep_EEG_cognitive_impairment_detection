@@ -163,3 +163,4 @@ cython_debug/
 *.edf
 LabelData_1/*
 *.pkl
+*.jpg
