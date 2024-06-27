@@ -42,28 +42,27 @@ class GenerateData:
 
         
         post_data = list()
-        normalizer = BaseNormalizer()
         negative_data = list()
-        for k, v in  postitive_label_dic.items():
+        for k, v in  postitive_label_dic.items():  # k = edf_name, v = center list
             edf = Edf(self._edf_dic[k])
-            sampler = BaseSampler(v, 1500)
-            
-            
-            x = sampler.sample_multi_channel(edf.all_channels_data, False)  # n * channles * points
-            # Utils.export_multi_channle_samples("./ux",x,4000)
-            z = [normalizer.normalize_list_with_same_mid(t) for t in x]
-            Utils.export_multi_channle_samples("./ut", z, 4000)
 
+            # 关键性处理，历史遗留问题！！！！！！！！！！！！！！！！！！
+            new_v = [(t - 625) for t in v]
+            # ！！！！！！！！！！！！！！！！！！
             
-            
-            return
+            # 正样本
+            sampler = BaseSampler(new_v, 1500)
+            z = sampler.sample_multi_channel(edf.all_channels_data, False)
+            post_data.extend(z)
+        
 
-            new_event_list = [p[0].mid_idx for p in z]
+            # Utils.export_multi_channle_samples(f"./尝试修复/{k.split(".")[0]}", x, 4000)
 
-            negative_sampler = NegativeSamplerWithNormalize(new_event_list, 1500, 10, 750, 30000, edf.name)
+            # 负样本
+            negative_sampler = NegativeSamplerWithNormalize(new_v, 1500, 10, 750, 30000, edf.name)
             y = negative_sampler.sample_multi_channel(edf.all_channels_data, False)
             print(negative_sampler.show())
-            post_data.extend(z)
+
             if y is not None:
                 negative_data.extend(y)
         
@@ -86,4 +85,3 @@ class GenerateData:
             
 g = GenerateData("./LabelData_1", "./edf")
 g.generate("./")
-
