@@ -50,8 +50,8 @@ def export_standard_train_data(path="001.edf", save_dir="LabelData", standard_ti
         edf = Edf(path, picks=picks)
     except:
         print(f"##### Error file: {path} ! #####")
-        import shutil
-        shutil.move(path, move_no_k_path) # 没有k波的，移走
+        # import shutil
+        # shutil.move(path, move_no_k_path) # 没有k波的，移走
         return
     normalizer = BaseNormalizer()
     sampler = BaseSampler(edf.k_complex_time, standard_time_length)
@@ -75,8 +75,8 @@ def save_label_data_from_edf(source_path, save_path, negative_sample=False, pick
         path = os.path.join(source_path, file)
         try:
             export_standard_train_data(path=path, save_dir=save_path, standard_time_length=1500, negative_sample=negative_sample, picks=picks, move_no_k_path=move_no_k_path)
-            import shutil
-            shutil.move(path, move_path) # 有k波的移走
+            # import shutil
+            # shutil.move(path, move_path) # 有k波的移走
         except:
             print(f"##### Error file: {file} ! #####")
             continue
@@ -101,11 +101,11 @@ if __name__ == '__main__':
         2: ['EEG F3-REF', 'EEG F4-REF', 'EEG C3-REF', 'EEG C4-REF'], # 201-268
         3: ['EEG F3-Ref', 'EEG F4-Ref', 'EEG C3-Ref', 'EEG C4-Ref'] # 三九
     }
-    source_path = r"H:\eef_edf\001-200 Preprocess\MCI_edf"  # 目录
-    save_path   = r"H:\eef_edf\001-200 Preprocess\LabelData"
+    source_path = r"data_ori"  # 目录
+    save_path   = r"LabelData" # 输出
     
-    move_path   = r"H:\eef_edf\001-200 Preprocess\MCI_edf_ori"
-    move_no_k_path = r"H:\eef_edf\001-200 Preprocess\MCI_edf_no_k"
+    move_path   = r"H:\eef_edf\001-200 Preprocess\MCI_edf_ori" # 不用改
+    move_no_k_path = r"H:\eef_edf\001-200 Preprocess\MCI_edf_no_k" # 不用改
     
     save_label_data_from_edf(source_path=source_path, save_path=save_path, negative_sample=False, picks=picks_dict[1], move_path=move_path, move_no_k_path=move_no_k_path)
 
