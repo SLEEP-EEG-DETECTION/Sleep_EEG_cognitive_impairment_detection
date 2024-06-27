@@ -65,7 +65,7 @@ class Utils:
         plt.figure(figsize=(12, 10))
         total = len(sample)
 
-        total_seconds = time_length // 1000
+        total_seconds = time_length / 1000
         x_ticks_point = [i * 500 for i in np.arange(0, total_seconds + 0.5, 0.5)]
         x_ticks_label = [str(i) for i in np.arange(0, total_seconds + 0.5, 0.5)]
         for i, s in enumerate(sample):
@@ -85,7 +85,7 @@ class Utils:
                 plt.yticks([y_min_label, -80, -50, 0, 50, 80, y_max_label], [str(y_min_label), '-80', '-50', '0', '50', '80', str(y_max_label)])
             plt.gca().invert_yaxis()
             plt.xlim(0, time_length // 2)
-            data = sample * 1000000
+            data = s * 1000000
             plt.xticks(x_ticks_point, x_ticks_label)
             plt.plot(data, scalex=False, scaley=False)
             plt.grid(True, which='both', axis='both', linestyle='--', linewidth=0.5, color='lightgrey')
